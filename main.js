@@ -47,7 +47,7 @@ var _copyOneFile = (function (Q) {
                 deferred.resolve();
             }
 
-            if (debug){
+            if (debug) {
                 console.log(result + ': bucket \'' + from.BUCKET + '\', file \'' + key + '\' to bucket \'' + to.BUCKET + '\'' + (to.path ? ', path \'' + to.path + '\'' : ''));
             }
 
@@ -133,7 +133,14 @@ var _backupFiles = function (s3Api, options, debug) {
 /**
  * @method copy
  *
- * @param {String} amazon_credentials_file Path to the file where credentials of amazon are stored.
+ * @param {String|Object} amazon_credentials Path to the file where credentials of amazon are stored (http://aws.amazon.com/sdkfornodejs/) or object with credentials (Ex.:
+ * {
+      accessKeyId: 'akid',//required
+      secretAccessKey: 'secret', //required
+      sessionToken: 'session', //optional
+      region: 'region' //optional
+   }
+ * ).
  * @param {Object} options. ex.:
  * {
         //required
@@ -156,26 +163,58 @@ var _backupFiles = function (s3Api, options, debug) {
  * @returns {Promise}
  */
 
-exports.copy = function (amazon_credentials_file, options) {
 
-    AWS.config.loadFromPath(amazon_credentials_file);
+var _createS3Api = function (amazon_credentials) {
+    var creds,
+        s3APi;
 
-    var s3Api = new AWS.S3(),
+    if (typeof amazon_credentials === 'string') {
+
+        AWS.config.loadFromPath(amazon_credentials);
+        s3APi = new AWS.S3();
+
+    } else if (typeof amazon_credentials === 'object' && amazon_credentials.accessKeyId && amazon_credentials.secretAccessKey) {
+
+        creds = new AWS.Credentials({
+            accessKeyId: amazon_credentials.accessKeyId,
+            secretAccessKey: amazon_credentials.secretAccessKey,
+            sessionToken: amazon_credentials.session
+        });
+
+        s3APi = new AWS.S3({
+            credentials: creds,
+            region: amazon_credentials.region
+        });
+
+    }
+
+    return s3APi;
+
+};
+
+exports.copy = function (amazon_credentials, options) {
+
+    var s3Api = _createS3Api(amazon_credentials),
         debug = options.debug,
         deferred = Q.defer();
 
-    if (options.from && options.from.BUCKET && options.from.path && options.to && options.to.BUCKET) {
+    if(s3Api){
+        if (options.from && options.from.BUCKET && options.from.path && options.to && options.to.BUCKET) {
 
-        //1º make backup
-        return _backupFiles(s3Api, options, debug)
-            .then(function () {
+            //1º make backup
+            return _backupFiles(s3Api, options, debug)
+                .then(function () {
 
-                //2º copy
-                return _copyFiles(s3Api, options.from, options.to, debug);
-            });
+                    //2º copy
+                    return _copyFiles(s3Api, options.from, options.to, debug);
+                });
 
-    } else {
-        deferred.reject('Params required. Check them!!');
+        } else {
+            deferred.reject('Params required. Check them!!');
+        }
+
+    }else{
+        deferred.reject('Bad amazonS3 credentials. Check them!!');
     }
 
     return deferred.promise;

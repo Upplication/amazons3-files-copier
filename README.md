@@ -7,7 +7,20 @@ Process to copy a group of files stored in a bucket or path in AmazonS3 to anoth
 Copy method
 --------
 
-	@param {String} amazon_credentials_file Path to the file where credentials of amazon are stored.
+
+
+	@param {String|Object} amazon_credentials Two ways:
+		1. Path to the file where credentials of amazon are stored (http://aws.amazon.com/sdkfornodejs/) 
+		2. Object with credentials (Ex.:
+			{
+				  accessKeyId: 'akid',//required
+				  secretAccessKey: 'secret', //required
+				  sessionToken: 'session', //optional
+				  region: 'region' //optional
+			}
+	
+	
+	
 	@param {Object} options. ex.:
 	{
 		 //required
@@ -27,5 +40,6 @@ Copy method
 		 },
 		 debug: true //optional {Boolean}
 	}
+	
 	@returns {Promise}
 
