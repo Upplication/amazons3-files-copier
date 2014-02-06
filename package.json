@@ -1,9 +1,14 @@
 {
     "name": "amazons3-files-copier",
-    "version": "0.0.1",    
+    "version": "0.0.2",    
 	"main": "main.js",
-	"description": "Node.js module to copy a group of files stored in a bucket or path in AmazonS3 to another bucket or path",
-	"author": "Borja Andrés",
+	"description": "Node.js module to copy a group of files stored in a bucket or path in AmazonS3 to another bucket or path",	
+	"licenses": "MIT", 
+	"author": {
+		"name": "Borja Andrés",
+		"email": "borya09@gmail.com",
+		"url": "http://borjaandres.com"
+	  }, 
 	"keywords": ["amazonS3", "s3", "amazon"],
 	"repository" : {
         "type": "git",
@@ -11,7 +16,7 @@
     },
     "dependencies": {      
         "q": "0.9.7",
-        "aws-sdk": "1.6.0"
+        "aws-sdk": "~1.12.0"
     },
 	"engines": { "node": "*" }
 }
