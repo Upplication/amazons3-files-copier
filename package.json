@@ -1,6 +1,6 @@
 {
     "name": "amazons3-files-copier",
-    "version": "0.0.3",    
+    "version": "0.0.4",    
 	"main": "main.js",
 	"description": "Node.js module to copy a group of files stored in a bucket or path in AmazonS3 to another bucket or path",	
 	"licenses": "MIT", 
