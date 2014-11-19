@@ -1,14 +1,14 @@
 amazons3-files-copier
 =====================
 
-Process to copy a group of files stored in a bucket or path in AmazonS3 to another bucket or path
+Process to copy a group of files stored in a bucket or path in AmazonS3 to another bucket or path and optionally backup the contents of the destination path or bucket to another path or bucket.
 
 
 ### Copy method
 
 ```js
 
-	@param {String|Object} amazon_credentials Two ways:
+	@param {String|Object} amazonCredentials Two ways:
 		1. Path to the file where credentials of amazon are stored (Structure example in file 'sample-amazon.json') 
 		2. Object with credentials (Ex.:
 			{
@@ -25,7 +25,7 @@ Process to copy a group of files stored in a bucket or path in AmazonS3 to anoth
 		 //required
 		 from:{
 			 BUCKET: 'bucketFrom',  //required {String}
-			 path: 'pathFrom'  //required {String}
+			 path: 'pathFrom'  //optional {String}
 		 },
 		 //required
 		 to:{
